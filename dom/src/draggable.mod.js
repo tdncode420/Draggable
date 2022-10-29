@@ -1,5 +1,6 @@
-const nullable = () => null;
-const Draggable = class {
+import { nullable } from "./utils.js";
+
+const _ = class {
     opts = {};
     defs = {
         contain: 'page',
@@ -24,7 +25,8 @@ const Draggable = class {
      * @param {boolean} [showCoords = false] - if true, the `x` and `y` coordinates while be shown next to the cursor
      * 
      */
-    constructor(ele, options = {}) {
+    constructor(ele, options={}) {
+        
         const self = this;
         const coords = () => {
             let elm = document.createElement('p');
@@ -33,11 +35,11 @@ const Draggable = class {
             return elm;
         };
         let coordsEle = null;
-
+        
         // set options
-        for (let opt in this.defs) {
-            this.opts[opt] = opt in options ? options[opt] : this.defs[opt];
-        }
+        for(let opt in this.defs){
+            this.opts[opt] = opt in options ? options[opt] : this.defs[opt]; 
+        } 
 
         // the element being wrapped
         this.ele = ele;
@@ -67,7 +69,7 @@ const Draggable = class {
 
         ele.addEventListener('mouseover', mouseOver);
 
-        function mouseOver(e) {
+        function mouseOver(e){
             e.preventDefault();
             ele.addEventListener('mousedown', mouseDown, {
                 once: true
@@ -75,7 +77,7 @@ const Draggable = class {
             self.opts.onHover(e);
         };
 
-        function mouseDown(e) {
+        function mouseDown(e){
             e.preventDefault();
             self.dx = e.clientX - self.ele.getBoundingClientRect().left;
             self.dy = e.clientY - self.ele.getBoundingClientRect().top;
@@ -96,7 +98,7 @@ const Draggable = class {
             let y = e.clientY - self.dy - self.total_oY;
             if (self.opts.showCoords) {
                 coordsEle.textContent = `X: ${x}px || Y: ${y}px`;
-                coordsEle.style.left = e.clientX + 10 + 'px';
+                coordsEle.style.left = e.clientX+10+'px';
                 coordsEle.style.top = e.clientY - 10 + 'px';
             }
             if (self.opts.contain === 'page') {
@@ -104,7 +106,7 @@ const Draggable = class {
                 let bounds = document.body.getBoundingClientRect();
                 if (x <= -(rect.left) - self.total_oX) {
                     x = -(rect.left) - self.total_oX;
-                }
+                } 
                 if (x >= bounds.width - self.total_oX - rect.width) {
                     x = bounds.width - self.total_oX - rect.width;
                 }
@@ -114,15 +116,15 @@ const Draggable = class {
                 if (y >= bounds.height - rect.height - self.total_oY) {
                     y = bounds.height - rect.height - self.total_oY;
                 }
-            } else if (self.opts.contain === 'parent') {
+            } else if(self.opts.contain === 'parent'){
                 let rect = ele.getBoundingClientRect();
                 let bounds = document.body.getBoundingClientRect();
                 let rBounds = bounds.width - rect.width;
                 let bBounds = bounds.height - rect.height;
-                if (x <= 1) {
+                if(x <= 1){
                     x = 1;
                 }
-                if (x >= rBounds) {
+                if(x >= rBounds){
                     x = rBounds;
                 }
                 if (y <= 1) {
@@ -131,7 +133,7 @@ const Draggable = class {
                 if (y >= bBounds) {
                     y = bBounds;
                 }
-            } else if (self.opts.contain instanceof HTMLElement) {
+            } else if (self.opts.contain instanceof HTMLElement){
                 let rect = ele.getBoundingClientRect();
                 let bounds = self.opts.contain.getBoundingClientRect();
                 if (x <= -(rect.left) - self.total_oX) {
@@ -151,7 +153,7 @@ const Draggable = class {
             self.opts.onDrag(e);
         };
 
-        function mouseUp(e) {
+        function mouseUp(e){
             e.preventDefault();
             if (self.opts.showCoords) {
                 coordsEle.remove();
@@ -161,3 +163,5 @@ const Draggable = class {
         };
     }
 };
+
+export {_ as Draggable};
