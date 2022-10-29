@@ -1,2 +1,4 @@
-test/test.html
-test/test.js
+test/*
+jsdoc.json
+examples/*
+docs/*
